@@ -1,11 +1,11 @@
-import {Priority} from "./Priority";
-import {Category} from "./Category";
+import {Priority} from './Priority';
+import {Category} from './Category';
 
 export class Task {
   id: number;
   title: string;
   complited: boolean;
-  priority?: Priority;//необязательное поле
+  priority?: Priority; /*необязательное поле*/
   category?: Category;
   date?: Date;
 
