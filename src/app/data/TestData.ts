@@ -1,5 +1,4 @@
 // тестовые данные в виде массивов (заменяют таблицы БД)
-
 import {Category} from '../model/Category';
 import {Priority} from '../model/Priority';
 import {Task} from '../model/Task';
