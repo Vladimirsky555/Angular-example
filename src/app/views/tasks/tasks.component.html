@@ -5,22 +5,32 @@
     <div class="card-body table-responsive">
         <table class="table table-hover">
             <thead class="text-warning">
-            <th>ID</th>
+            <th>#</th>
             <th>Название</th>
             <th>Категория</th>
             <th>Приоритет</th>
-            <th>Статус</th>
             <th>Дата</th>
+            <th>Статус</th>
 
             </thead>
             <tbody>
-            <tr *ngFor="let task of tasks">
-                <td>{{task.id}}</td>
-                <td>{{task.title}}</td>
-                <td>{{task.category}}</td>
-                <td>{{task.priority}}</td>
-                <td>{{task.completed}}</td>
-                <td>{{task.date}}</td>
+            <tr *ngFor="let task of tasks; let i = index" [class.completed]="task.completed">
+                <td [class.novalue]="task.category == null">{{i+1}}</td>
+                <td [class.novalue]="task.category == null">{{task.title}}</td>
+                <td [class.novalue]="task.category == null">{{task.category != null ? task.category.title : "Без категории"}}</td>
+                <td [class.novalue]="task.category == null">{{task.priority != null ? task.priority.title : "Без приоритета"}}</td>
+                <td [class.novalue]="task.category == null">{{task.date != null ? (task.date | date:'yyyy-MM-dd / mm-ss') : "Без даты"}}</td>
+                <td>
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input [checked] = "task.completed" class="form-check-input" type="checkbox" value=""
+                      (click)="toggleTaskCompleted(task)">
+                      <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                    </label>
+                  </div>
+                </td>
             </tr>
 
             </tbody>

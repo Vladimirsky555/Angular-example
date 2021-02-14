@@ -1,0 +1,112 @@
+https://javabegin.ru/app/todo
+
+Среда разработки: 
+IntelliJ IDEA (WebStorm) - платный
+Visual Studio Code - бесплатный
+Angular IDE - платный (основан на Eclipse)
+
+https://stackblitz.com
+https://www.madewithangular.com/ - примеры сайтов
+
+1)Java 8 или выше
+2)IntelliJ IDEA Ultimate (либо другая IDE, например
+https://code.visualstudio.com/ - бесплатная, многие
+используют) - требует Java
+3)Node.js https://nodejs.org - сервер для запуска
+приложений, установщик пакетов npm и многое другое.
+Без него Angular не работает
+4)Angular CLI - Command Line Interface - включает в себя
+библиотеку Angular и все необходимые инструменты
+5)Браузеры Google Chrome и Firefox - для отладки
+приложений
+
+Сервер (lightweight web server) для запуска Angular приложений (автоматические обновление при изменении кода)
+https://github.com/webpack/docs/wiki/webpack-dev-server
+Установщик пакетов npm - с помощью него устанавливается Angular и различные JS-библиотеки
+JavaScript engine (движок)
+Компиляция из TypeScript в JavaScript (которые понимают браузеры)
+После установки - должна работать команда npm (пакет установщиков, с помощью которых будем добавлять Angular)
+Инструмент командной строки для работы в Angular (создание компонентов, запуск сервера и пр.)
+Включает в себя также все необходимые файлы Angular последней версии
+Визуальный инструмент: https://angularconsole.com 
+После установки - должна работать команда ng
+
+Установка IntelliJ Idea:
+1) JDK (не JRE) - https://www.oracle.com/technetwork/java/javase/downloads
+2) Настройка auto-import
+   https://www.jetbrains.com/help/idea/creating-and-optimizing-imports.html
+   View -> Appearance -> Toolbar - видимость области инструментов
+3) Вкладка Structure слева - чтобы все видно было
+   Размер шрифта - чтобы вам было удобней - для кода и левого
+   меню (в настройках Font)
+   Тема (темная, светлая) - Darcula не напрягает глаза
+   https://www.jetbrains.com/help/idea/switching-between-schemes.html
+   Используйте сокращения, чтобы быстрее писать код
+   https://www.jetbrains.com/help/idea/using-file-and-code-templates.html
+4) Используйте генераторы коды (Code -> Generate)
+   Соединитесь с GitHub или другой системой (если используйте - чтобы IDE предлагала добавлять файлы в репозиторий кода
+
+Установка Angular:
+1) Установить Node.js
+2) Проверить в командной строке node -v, npm -v. Если версия прописывается, то всё установлено правильно.
+   Если версия не прописывается и выходит ошибка “command not found” - нужно добавить пути в переменную path 
+   Поиск - Система - Доп.параметры - Переменные среды
+   Для npm: c:\Program Files\nodejs
+   Для ng: c:\Users\[ваш пользователь]\AppData\Roaming\npm
+3) Далее установить Angular командой npm install -g @angular/cli (источник: https://angular.io/guide/setup-local)
+   В результате установится ng, с помощью которой мы будем создавать компоненты, запускать сервер, обновлять
+4) В командную строку вводим команду ng для проверки или ng --version (значит Angular CLI установлен)
+   Если команды не работают, снова проверить переменные среды. В path верхней части должна появиться запись - 
+   C:\Users\Vladimir\AppData\Roaming\npm
+   
+Создание проекта Angular:
+1) cd C:\Users\Vladimir\IdeaProjects
+2) ng new angular-basics
+3) cd angular-basics
+4) npm start
+5) Доступ к проекту http://localhost:4200/
+
+Структура Angular-проекта:
+node-modules - файлы фреймворка
+src - исходный код, дополнительные файлы проекта
+angular.json - настройки приложения
+polyfills.ts  - настройки браузеров
+main.ts - настройки по запуску
+assets - папка для файлов (изображения, стили, всё что не входит в стандартный набор модулей)
+app - компоненты
+Компонент - основной элемент 
+1) Класс
+2) Html
+3) Настройки компонента
+
+@Component - декоратор, добавляет к классу метаданные. Их распознаёт движок и понимает, что это класс визуального компонента
+
+Установка библиотек в проект:
+nmp install bootstrap-css-only - (не сработала)
+ng add @ng-bootstrap/ng-bootstrap - сработала в IntelliJ Idea
+ng add @angular/material - подключение Angular Material
+-> убедиться, что в node_modules прошла установка библиотеки
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+http://typescript-lang.ru/docs/ - Перевод официальной документации Typescript на русский
+https://angular24.ru/docs - документация Angular на русском
+https://metanit.com/web/angular2/ - ангуляр на русском
+https://angular-doc.ru/docs
+https://xsltdev.ru/angular/ - Angular справочник
+https://xsltdev.ru/nodejs/ - справочник по Node.js
+
+https://yehudakatz.com/2011/08/11/understanding-javascript-function-invocation-and-this/ - стать€ очень хорошо объясняет, как работает this "под капотом", поэтому здесь мы рассмотрим только основы.
+ 
+https://www.youidraw.com/apps/painter/ - рисовалка дл€ структуры проекта
+https://mobirise.com/ -  free offline app for Windows and Mac to easily create small/medium websites, landing pages, online resumes and portfolios
+https://getbootstrap.com - бутстрап
+https://getbootstrap.com/examples - примеры использовани€ бутстрап-шаблонов
+http://www.w3schools.com/bootstrap4/bootstrap_grid_examples.asp
+https://www.w3schools.com/bootstrap4/bootstrap_ref_all_classes.asp - все классы бутстрап
+https://getbootstrap.com/docs/4.0/layout/grid - принцип разметки бутстрап
+ 
+Ѕиблиотеки дл€ Angular (UI components for angular):
+https://material.angular.io - набор material-компонентов дл€ Angular (используетс€ дл€ UI-компонентов (кнопки, списки))
+http://www.telerik.com/kendo-angular-ui (очень дорогие)
+http://clarity.design
+http://mdbootstrap.com/docs/angular
+
+https://angular.io/guide/pipes - пайпы
+https://angular.io/guide/architecture-modules - модули
+https://angular.io/guide/architecture-components - компоненты
+https://angular.io/guide/architecture-services - сервисы
+
+? DI в Angular:
+? https://angular.io/guide/architecture-services
+? https://angular.io/guide/dependency-injection
+? Директивы:
+? https://dzone.com/articles/angular-directives-1

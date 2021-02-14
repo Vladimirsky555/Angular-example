@@ -1,0 +1,206 @@
+ФУНКЦИОНАЛ:
+CRUD (создание/добавление/удаление/обновление):
+* Категории (вложенность одного уровня)
+* Задачи со статусами (решено, нерешено)
+* Приоритеты с цветом (чтобы выделять задачи)
+Статистика:
+* решенные
+* нерешенные
+* проценты
+Поиск/фильтрация:
+* Категория
+* Статус
+* Приоритет
+* Название задачи
+Отображение на мобильном устройстве
+
+Основные объекты:
+Задача:
+* id - number
+* Название - string
+* Статус - boolean
+* Приоритет - Priority
+* Категория - Category
+* Срок (до какого числа нужно выполнить) - Date
+
+Приоритет:
+* id - number
+* Название - string
+* Цвет - string
+
+Категория:
+* id - number
+* Название - string
+
+Технологии:
+В данный момент Todo - это и backend и frontend:
+backend - манипулирует данными напрямую (имеет доступ к БД)
+frontend - отображает внешний вид и реагирует на действия пользователя
+Используется сервер Node.js
+---
+Если бы данные брались с другого сервера с помощью
+запросов - то текущий проект был бы только как frontend
+
+Можете создать полностью “статичный” проект (скелет) и потом по частям
+добавлять всю “динамику” - будем использовать этот подход
+
+Ход создания приложения:  
+1) В app создаём папку Model, прописываем модели
+2) В app создаём папку data, в ней создаём файл данных TestData.ts
+3) В app создаём папку views для визуальных компонентов
+4) Создаём в папке views компонент: new - Angular schematic - component
+   --skipTests не пишем, так как при создании проекта мы указали, что не будем его тестировать
+   Пишем имя компонента. В результате в папке views появилась папка categories с файлами:
+   categories.component.css
+   categories.component.html
+   categories.component.spec.ts - файл тестирования
+   categories.component.ts 
+   
+   Создаётся класс-заглушка:
+   export class CategoriesComponent implements OnInit {
+   constructor() { }
+   ngOnInit(): void {
+   }
+}
+5) В app создаём папку service, для взаимодействия с базой данных
+6) Создаём в папке service сервис: new - Angular schematic - service, с именем DataHandler
+   Из компонента мы будем обращаться к сервису, а он уже будет иметь доступ к базе данных
+   Создаётся класс с меткой @Injectable, с возможностью внедрения в любое место нашего кода
+   providedIn: 'root' - область доступа с корня, для всех компонентов
+   Создаётся класс:
+   export class DataHandlerService {
+   constructor() { }
+   }
+7) Вырезаем из app.component.html участок кода с категориями, вставляем в categories.component.html
+8) На место вырезанного участка вставляем <app-categories></app-categories>
+   При открытии проекта визуально ничего не меняется
+9) В файле data-handler.service.ts создаём метод возвращающий все категории
+    getCategories(): Category[]{
+       return TestData.categories;
+	}
+10) В файл categories.component.ts добавляем
+    constructor(private dataHandler: DataHandlerService) { }
+	Значит при создании класса Category, в него будет внедрена ссылка на класс DataHandlerService
+11) То же делаем и с задачами: в data-handler.service.ts
+      getTasks(): Task[]{
+    return TestData.tasks;
+  }
+  В tasks.component.ts создаём массив tasks: Task[];, 
+  в конструкторе принимаем класс DataHandler:
+  constructor(private dataHandler: DataHandlerService) {}
+  И считываем данные:
+  ngOnInit(): void {
+    this.tasks = this.dataHandler.getTasks();
+  }
+  Далее в html-коде компонента вставляем *ngFor="let task of tasks"
+  И вместо текста: {{task.title}}
+  
+12) Реактивное программирование.
+Наши данные оборачиваем в контейнер Subject и подписчики слушают. Как только данные меняются, подписчики что-то делают. 
+Подписчики слушают изменения и получают обновления, не работают напрямую с данными
+1) Создаём и инициализируем объект tasksSubject = new Subject<Task[]>(); в data-handler.service.ts. 
+   Отслеживается и передаётся тип объектов Task[]
+2) Пишем метод
+  fillTasks() {
+    this.tasksSubject.next(TestData.tasks);
+  } 
+  вместо 
+  // getTasks(): Task[]{
+  //     return TestData.tasks;
+  //   }
+  Это значит, что в tasksSubject поступило новое значение
+  next - значит передаётся новое значение, которое будет принято всеми кто подписался
+  Далее: 
+  fillTasksByCategory(category: Category){
+    const tasks = TestData.tasks.filter(task => task.category === category);
+    this.tasksSubject.next(tasks);
+  }
+  вместо  
+  // getTasksByCategory(category: Category): Task[]{
+  //   const tasks = TestData.tasks.filter(task => task.category === category);
+  //   return tasks;
+  // }
+  Передаём вместо параметров отфильтрованный tasks
+  Как только вызывается метод next - все подписчики получают значение tasks
+3) Подписываемся на это событие:
+   В файле tasks.component.ts
+    ngOnInit(): void {
+    // this.tasks = this.dataHandler.getTasks();
+    this.dataHandler.tasksSubject.subscribe(tasks => this.tasks = tasks);
+  }
+Схема работы:
+1. categories.component.html -> Нажатие на категорию, отрабатывает клик (click)="showTasksByCategory(category)
+2. В categories.component.ts вызывается fillTasksByCategory(category) и передаётся значение
+3. В data-handler.service.ts отфильтровка данных в соответствии с категорией и уведомление всех подписчиков о том,   что значение изменилось 
+4. В tasks.component.ts -> this.dataHandler.tasksSubject.subscribe(tasks => this.tasks = tasks);
+   значения получены, присваиваются переменной tasks 
+5. tasks.component.html обновляет у себя эти данные, так как он слушает изменение этой переменной 
+
+4) Замена tasksSubject = new BehaviorSubject<Task[]>(TestData.tasks); 
+   вместо 
+   tasksSubject = new Subject<Task[]>();
+   И у нас выводится список всех задач при заходе на сайт
+5) В data-handler.service.ts создаём categoriesSubject = new BehaviorSubject<Category[]>(TestData.categories);
+6) Тогда в categories.component.ts
+   //ngOnInit(): void {
+   //  this.categories = this.dataHandler.getCategories();
+   //}
+  становится 
+    ngOnInit() {
+    this.dataHandler.categoriesSubject.subscribe(categories => this.categories = categories);
+  }
+  Таким образом и сами категории мы получаем в реактивном стиле
+7) Pipe - позволяет преобразовать значение в другой вид или формат (класс TypeScript, 
+   который преобразовывает     значение в результат)
+8) В tasks.component.html решаем проблему ошибки
+        <tr *ngFor="let task of tasks; let i = index">
+                <td>{{i}}</td>
+                <td>{{task.title}}</td>
+                <td>{{task.category != null ? task.category.title : "Без категории"}}</td>
+                <td>{{task.priority != null ? task.priority.title : "Без приоритета"}}</td>
+                <td>{{task.date != null ? task.date : "Без даты"}}</td>
+                <td>{{task.completed}}</td>
+        </tr>
+9) Там же преобразуем дату
+   <td>{{task.date != null ? (task.date | date:'yyyy-MM-dd / mm-ss') : "Без даты"}}</td>
+10) Активность категории при клике:
+    В categories.component.ts переменную selectedCategory: Category;
+	В методе showTasksByCategory -> this.selectedCategory = category;
+	В компоненте с категориями: 
+	      <li class="nav-item" *ngFor="let category of categories" (click)="showTasksByCategory(category)"
+          [class.active]="category === selectedCategory">
+		  === - сравнение по типу и значению
+11) Изменить курсор при наведении на категории:
+    В categories.component.css - 
+	.pointer {
+     cursor: pointer;
+   }
+   В categories.component.html - <li class="nav-item pointer" ...
+12) Галочка в статусе:
+    Берём код html для галочки из макета и добавляем [checked] = "task.completed" вместо chacked
+13) Реакция на чекбокс: 
+    В tasks.component.css добавить 
+	.completed {
+  text-decoration: line-through;
+  color: #797979;
+   }
+   В tasks.component.html ->
+   <tr *ngFor="let task of tasks; let i = index" [class.completed]="task.completed">
+   Далее:
+    <input [checked] = "task.completed" class="form-check-input" type="checkbox" value=""
+    (click)="toggleTaskCompleted(task)">
+	В tasks.component.ts ->
+    toggleTaskCompleted(task: Task) {
+    task.completed = !task.completed;
+  }
+14) Обесцветить задачи без категории:
+  В tasks.component.css ->
+  .novalue {
+  color: #b7b7b7;
+  }
+  В tasks.component.html ->
+  <td [class.novalue]="task.category == null">{{i+1}}</td>
+  <td [class.novalue]="task.category == null">...</td>
+  <td [class.novalue]="task.category == null">...</td>
+  <td [class.novalue]="task.category == null">...</td>
+  <td [class.novalue]="task.category == null">...</td>  
